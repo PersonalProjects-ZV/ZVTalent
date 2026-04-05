@@ -5,6 +5,9 @@ import Job from "@/models/Job";
 import { extractTextFromPDF } from "@/lib/parseResume";
 import { analyzeCV } from "@/lib/ai";
 
+// Increase Vercel serverless function timeout
+export const maxDuration = 60;
+
 // GET all applications (for dashboard)
 export async function GET(req: NextRequest) {
   await dbConnect();
@@ -46,7 +49,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Get job details for AI analysis
   const job = await Job.findById(jobId);
   if (!job) {
     return NextResponse.json({ error: "Job not found" }, { status: 404 });
@@ -55,22 +57,20 @@ export async function POST(req: NextRequest) {
   // Read PDF buffer
   const bytes = await resume.arrayBuffer();
   const buffer = Buffer.from(bytes);
-  console.log("[APP] Resume file:", resume.name, "size:", buffer.length, "type:", resume.type);
 
   // Extract text from PDF
   let resumeText = "";
   try {
     resumeText = await extractTextFromPDF(buffer);
-    console.log("[APP] Extracted text length:", resumeText.length, "preview:", resumeText.substring(0, 100));
   } catch (err) {
     console.error("[APP] PDF extraction failed:", err);
     resumeText = "Could not extract text from PDF";
   }
 
-  // Save resume as base64 (for small files - production would use cloud storage)
+  // Save resume as base64
   const resumeBase64 = buffer.toString("base64");
 
-  // Create application first
+  // Create application
   const application = await Application.create({
     jobId,
     fullName,
@@ -83,22 +83,21 @@ export async function POST(req: NextRequest) {
     resumeText,
   });
 
-  // AI Analysis (run async, don't block response)
-  analyzeCV(resumeText, job.title, job.description)
-    .then(async (analysis) => {
-      await Application.findByIdAndUpdate(application._id, {
-        aiScore: analysis.score,
-        aiReason: analysis.reason,
-        aiStrengths: analysis.strengths,
-        aiWeaknesses: analysis.weaknesses,
-        aiMatchPercent: analysis.matchPercent,
-        aiInterviewQuestions: analysis.interviewQuestions,
-        status: analysis.recommendation,
-      });
-    })
-    .catch((err) => {
-      console.error("AI analysis failed:", err);
+  // AI Analysis - await it so Vercel doesn't kill the function
+  try {
+    const analysis = await analyzeCV(resumeText, job.title, job.description);
+    await Application.findByIdAndUpdate(application._id, {
+      aiScore: analysis.score,
+      aiReason: analysis.reason,
+      aiStrengths: analysis.strengths,
+      aiWeaknesses: analysis.weaknesses,
+      aiMatchPercent: analysis.matchPercent,
+      aiInterviewQuestions: analysis.interviewQuestions,
+      status: analysis.recommendation,
     });
+  } catch (err) {
+    console.error("AI analysis failed:", err);
+  }
 
   return NextResponse.json(
     { message: "Application submitted successfully!", id: application._id },

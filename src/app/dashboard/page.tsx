@@ -404,22 +404,34 @@ export default function Dashboard() {
               </div>
 
               {/* Contact */}
-              <div className="flex gap-3 mt-6">
+              <div className="flex gap-2 sm:gap-3 mt-6">
                 <a
                   href={`tel:${selectedApp.phone}`}
-                  className="flex-1 text-center py-3 border border-black rounded-lg text-sm font-medium hover:bg-black hover:text-white transition-colors"
+                  className="flex-1 text-center py-3 border border-black rounded-lg text-xs sm:text-sm font-medium hover:bg-black hover:text-white transition-colors"
                 >
                   Call
                 </a>
                 <button
-                  onClick={() => navigator.clipboard.writeText(selectedApp.phone)}
-                  className="flex-1 text-center py-3 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+                  onClick={() => {
+                    if (navigator.clipboard) {
+                      navigator.clipboard.writeText(selectedApp.phone);
+                    } else {
+                      const t = document.createElement("textarea");
+                      t.value = selectedApp.phone;
+                      document.body.appendChild(t);
+                      t.select();
+                      document.execCommand("copy");
+                      document.body.removeChild(t);
+                    }
+                    alert("Phone number copied!");
+                  }}
+                  className="flex-1 text-center py-3 border border-gray-200 rounded-lg text-xs sm:text-sm hover:bg-gray-50 transition-colors"
                 >
-                  Copy Number
+                  Copy
                 </button>
                 <a
                   href={`mailto:${selectedApp.email}`}
-                  className="flex-1 text-center py-3 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+                  className="flex-1 text-center py-3 border border-gray-200 rounded-lg text-xs sm:text-sm hover:bg-gray-50 transition-colors"
                 >
                   Email
                 </a>
