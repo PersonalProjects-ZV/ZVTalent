@@ -59,6 +59,14 @@ export default function Dashboard() {
     fetchApplications();
   }, []);
 
+  // Auto-refresh when there are pending AI analyses
+  useEffect(() => {
+    const hasPending = applications.some((a) => a.aiScore === null);
+    if (!hasPending) return;
+    const interval = setInterval(fetchApplications, 5000);
+    return () => clearInterval(interval);
+  }, [applications]);
+
   if (!authorized) {
     return (
       <>

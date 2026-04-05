@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
 export default function LoginPage() {
@@ -93,13 +92,7 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center text-sm text-gray-400 mt-6">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/signup"
-              className="text-black font-medium hover:underline"
-            >
-              Sign Up
-            </Link>
+            HR Portal Access Only
           </p>
         </div>
       </main>
