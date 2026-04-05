@@ -12,7 +12,7 @@ export async function POST() {
       description:
         "We are looking for an experienced Java Developer to design, develop, and maintain high-performance backend applications. You will work with Spring Boot, microservices architecture, and cloud technologies to build scalable solutions.",
       location: ["Karachi"],
-      team: "Java Developer",
+      team: "Engineering",
       vacancies: 5,
       workingHours: "8 hours",
       requirements: [
@@ -27,7 +27,7 @@ export async function POST() {
       description:
         "Looking for a skilled MERN Stack Developer to build and maintain web applications. You will work with MongoDB, Express.js, React.js, and Node.js to develop full-stack solutions.",
       location: ["Karachi"],
-      team: "Mern Stack Developer",
+      team: "Engineering",
       vacancies: 5,
       workingHours: "8 hours",
       requirements: [
@@ -42,7 +42,7 @@ export async function POST() {
       description:
         "Join our engineering team as a Senior Java Developer. You will lead the design and implementation of complex backend systems, mentor junior developers, and drive best practices across the team.",
       location: ["Karachi"],
-      team: "Java Developer",
+      team: "Engineering",
       vacancies: 2,
       workingHours: "8 hours",
       requirements: [
@@ -72,7 +72,7 @@ export async function POST() {
       description:
         "We are seeking a Full Stack Developer proficient in the MERN stack to build end-to-end web applications. You will collaborate with designers and backend teams to deliver seamless user experiences.",
       location: ["Karachi"],
-      team: "Mern Stack Developer",
+      team: "Engineering",
       vacancies: 3,
       workingHours: "8 hours",
       requirements: [

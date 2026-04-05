@@ -22,7 +22,7 @@ export default function JobCard({ _id, title, location, team, vacancies }: JobCa
         </div>
         <div className="mt-3 sm:mt-4 flex items-center justify-between gap-2">
           <span className="text-xs text-gray-400 shrink-0">{vacancies} vacancies</span>
-          <span className="text-xs font-medium bg-black text-white px-3 py-1 rounded-full truncate max-w-[120px]">
+          <span className="text-xs font-medium bg-black text-white px-3 py-1 rounded-full whitespace-nowrap">
             {team}
           </span>
         </div>
